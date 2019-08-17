@@ -9,6 +9,7 @@ import com.example.checkmate.R
 import com.braintreepayments.cardform.view.CardForm
 import com.example.checkmate.data.SessionState
 import com.example.checkmate.finalPayment.FinalPaymentActivity
+import com.example.checkmate.main.MainActivity
 import kotlinx.android.synthetic.main.activity_card_form.*
 
 
@@ -66,6 +67,9 @@ class CardFormActivity : AppCompatActivity() {
         if (sessionState.isCreator) {
             val intent = Intent(this, FinalPaymentActivity::class.java)
             intent.putExtra("sessionState", sessionState)
+            startActivity(intent)
+        } else {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
     }

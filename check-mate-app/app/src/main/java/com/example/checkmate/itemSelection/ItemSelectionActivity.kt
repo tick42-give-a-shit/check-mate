@@ -75,15 +75,25 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
         // val json = readFromFile(jsonPath)
         // var mapper = jacksonObjectMapper()
         // joinData = mapper.readValue(json)
+
+
         sessionState = intent.getParcelableExtra("sessionState")
-        joinData = JoinData(
-            sessionState.billId!!.toString(),
-            DataHolder.base64!!,
-            sessionState.restaurant!!,
-            DataHolder.items!!,
-            DataHolder.total!!,
-            sessionState.myColor
-        )
+        if (DataHolder.base64 == null) {
+
+            finish()
+            return
+        }
+        if (DataHolder.base64 != null) {
+            joinData = JoinData(
+                sessionState.billId!!.toString(),
+                DataHolder.base64!!,
+                sessionState.restaurant!!,
+                DataHolder.items!!,
+                DataHolder.total!!,
+                sessionState.myColor
+            )
+        }
+
         viewModel = ViewModelProviders.of(this, ItemSelectionViewModelFactory(this.applicationContext))
             .get(ItemSelectionViewModel::class.java)
         var base64 = DataHolder.base64
@@ -95,11 +105,14 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
         billPhoto.setViewModel(viewModel)
         billPhoto.setOnTouchListener(this)
         billPhoto.setOnLongClickListener(this)
-        var r = Integer.valueOf(joinData!!.color!!.substring(1, 3), 16);
-        var g = Integer.valueOf(joinData!!.color!!.substring(3, 5), 16);
-        var b = Integer.valueOf(joinData!!.color!!.substring(5, 7), 16);
+        if (joinData != null) {
+            var r = Integer.valueOf(joinData!!.color!!.substring(1, 3), 16);
+            var g = Integer.valueOf(joinData!!.color!!.substring(3, 5), 16);
+            var b = Integer.valueOf(joinData!!.color!!.substring(5, 7), 16);
 
-        simpleTextView.setBackgroundColor(Color.argb(60, r, g, b))
+            simpleTextView.setBackgroundColor(Color.argb(60, r, g, b))
+        }
+
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         if (nfcAdapter == null) {
@@ -123,7 +136,7 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
     }
 
     private fun poll() {
-        viewModel.itemDetails.observe(this, Observer { t->
+        viewModel.itemDetails.observe(this, Observer { t ->
             print("a")
         })
 

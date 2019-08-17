@@ -2,6 +2,7 @@ package com.example.checkmate.finalPayment
 
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,13 +14,16 @@ import kotlinx.android.synthetic.main.activity_final_payment.*
 import android.graphics.*
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.checkmate.data.SessionState
 import com.example.checkmate.data.model.ItemPaymentDetails
 import com.example.checkmate.itemSelection.ItemSelectionViewModel
 import com.example.checkmate.itemSelection.ItemSelectionViewModelFactory
+import com.example.checkmate.main.MainActivity
 
 class ColorToPaid(val color: String, val hasPaid: Boolean)
 
@@ -41,8 +45,8 @@ class FinalPaymentAdapter(val context: Context, private val mData: List<ColorToP
 
     // binds the data to the TextView in each row
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.myIconView.setImageDrawable(context.resources.getDrawable(R.drawable.icons8_checkmark_24))
-        holder.myColorView.setBackgroundColor(Color.GREEN)
+        val item = mData[position]
+        holder.myIconView.text = item.color + " " + item.hasPaid.toString()
     }
 
     // total number of rows
@@ -54,13 +58,11 @@ class FinalPaymentAdapter(val context: Context, private val mData: List<ColorToP
     // stores and recycles views as they are scrolled off screen
     inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
-        internal var myIconView: ImageView
+        internal var myIconView: TextView
 
-        internal var myColorView: ImageView
 
         init {
-            myIconView = itemView.findViewById(R.id.iconView)
-            myColorView = itemView.findViewById(R.id.colorView)
+            myIconView = itemView.findViewById(R.id.resultText)
 
             itemView.setOnClickListener(this)
         }
@@ -98,53 +100,43 @@ class FinalPaymentActivity : AppCompatActivity() {
         val sessionState = intent.getParcelableExtra<SessionState>("sessionState")
         viewModel = ViewModelProviders.of(this, ItemSelectionViewModelFactory(this))
             .get(ItemSelectionViewModel::class.java)
-        val myAdapter: FinalPaymentAdapter = FinalPaymentAdapter(this, listOfData)
 
+
+
+        listOfData = arrayListOf()
+
+        val myAdapter: FinalPaymentAdapter = FinalPaymentAdapter(this, listOfData.toList())
         listLayout.adapter = myAdapter;
+        listLayout.layoutManager = LinearLayoutManager(this)
 
         viewModel.poll(sessionState.billId.toString())
+        myAdapter.notifyDataSetChanged()
+
         poll()
-        listOfData = arrayListOf()
+
+        finalPayButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+
+            startActivity(intent)
+        }
 
 
     }
 
     private fun poll() {
         viewModel.itemDetails.observe(this, Observer { t ->
+
+
             val colors = getColors(t.items.toList())
+//
+            val newList = colors.map { c -> ColorToPaid(c, hasColorPaid(c, t.items.toList())) }
 
-            colors.forEach { c ->
-                val view = createViewForColor(c, hasColorPaid(c, t.items.toList()))
-
-                //linearLayout.addView(view)
-            }
-
-            val itemsList = arrayListOf<ItemStatus>(
-                ItemStatus("lasagna", arrayOf(ItemPaymentDetails("#FFFFFF", 1, true))), ItemStatus(
-                    "pizza",
-                    arrayOf(ItemPaymentDetails("#333333", 1, false))
-                )
-            )
+            listOfData.clear()
+            listOfData.addAll(newList)
+            listLayout.adapter!!.notifyDataSetChanged()
 
 
         })
-
-
-        val itemsList = arrayListOf<ItemStatus>(
-            ItemStatus("lasagna", arrayOf(ItemPaymentDetails("#FFFFFF", 1, true))), ItemStatus(
-                "pizza",
-                arrayOf(ItemPaymentDetails("#333333", 1, false))
-            )
-        )
-
-        val colors = getColors(itemsList)
-
-        val newList = colors.map { c -> ColorToPaid(c, hasColorPaid(c, itemsList)) }
-
-        listOfData.addAll(newList)
-
-        listLayout.adapter!!.notifyDataSetChanged()
-
 
     }
 
