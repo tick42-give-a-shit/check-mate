@@ -53,10 +53,93 @@ const getNewColorForBillId = (id) => {
   return colors.find((color) => !db[id].users.some((user) => user.color === color));
 };
 
+const insertNewBill = (id, itemsWithoutSelections, restaurant, creatorUserColor, total, base64) => {
+  db[id] = {
+    items: itemsWithoutSelections.map((itemWithoutSelections) => ({
+      ...itemWithoutSelections,
+      selections: []
+    })),
+    restaurant,
+    users: [{
+      color: creatorUserColor,
+      hasPaid: false
+    }],
+    total,
+    base64
+  };
+};
+
+const addUserColorToBillId = (id, userColor) => {
+  if (!db[id].users.some((user) => user.color === userColor)) {
+    db[id].users.push({
+      color: userColor,
+      hasPaid: false
+    });
+  }
+};
+
+const tagUserColorAsHasPaidForBillId = (id, userColor) => {
+  db[id].users.find((user) => user.color === userColor).hasPaid = true;
+};
+
 const getBill = (id) => db[id];
+
+const getBillDetails = (id) => {
+  const bill = db[id];
+
+  if (typeof bill === 'undefined') {
+    return {};
+  }
+
+  return {
+    items: bill.items.map((item) => ({
+      name: item.name,
+      details: item.selections.map(({ color, quantity }) => ({
+        color,
+        quantity,
+        hasBeenPaidFor: bill.users.find((user) => user.color === color).hasPaid
+      }))
+    }))
+  };
+};
+
+const getItemForBillId = (id, itemName) => db[id].items.find((item) => item.name === itemName);
+
+const getCurrentlySelectedTotalItemQuantity = (item) => item.selections.reduce((quantity, selection) => quantity + selection.quantity, 0);
+
+const tagItemAsSelectedByUserColor = (id, itemName, userColor) => {
+  const item = getItemForBillId(id, itemName);
+
+  if (typeof item === 'undefined') {
+    return;
+  }
+
+  const itemTotalQuantity = item.quantity;
+  const itemCurrentlySelectedQuantity = getCurrentlySelectedTotalItemQuantity(item);
+
+  if (itemCurrentlySelectedQuantity === itemTotalQuantity) {
+    return;
+  }
+
+  const hasUserColorAlreadyBoughtItem = item.selections.some((selection) => selection.color === userColor);
+
+  if (hasUserColorAlreadyBoughtItem) {
+    item.selections.find((selection) => selection.color === userColor).quantity++;
+  } else {
+    item.selections.push({
+      color: userColor,
+      quantity: 1
+    });
+  }
+};
 
 module.exports = {
   generateNewId,
   getNewColorForBillId,
-  getBill
+  insertNewBill,
+  addUserColorToBillId,
+  tagUserColorAsHasPaidForBillId,
+  getBill,
+  getBillDetails,
+  tagItemAsSelectedByUserColor
 };
