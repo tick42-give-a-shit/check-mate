@@ -18,6 +18,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import android.graphics.BitmapFactory
 import com.example.checkmate.itemSelection.ItemSelectionActivity
+import com.example.checkmate.joinBillSession.JoinBillSessionActivity
 import java.nio.ByteBuffer
 
 
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(com.example.checkmate.R.layout.activity_main)
         scanButton.setOnClickListener { this.dispatchTakePictureIntent() }
+        joinButton.setOnClickListener { this.joinBillSession() }
 
         mainActivityViewModel = ViewModelProviders.of(this, MainActivityViewModelFactory(this.applicationContext))
             .get(MainActivityViewModel::class.java)
@@ -52,6 +54,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun joinBillSession() {
+        val intent = Intent(this, JoinBillSessionActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
