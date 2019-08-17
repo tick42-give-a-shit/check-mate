@@ -92,7 +92,8 @@ public class CustomView extends ImageView {
                 if (item.getName().toUpperCase().equals(joinItem.getName().toUpperCase())) {
                     // System.out.println(">>> Got one! " + item.getName());
                     for (ItemPaymentDetails detail : item.getDetails()) {
-                        if (detail.getColor() == null) {
+                        if (detail.getColor() == null ||
+                            detail.getColor().equals(this.joinData.getColor())) {
                             continue;
                         }
                         this.addColor(joinItem, detail.getColor());
@@ -125,6 +126,7 @@ public class CustomView extends ImageView {
                         (joinItem.getPosition().getY() + joinItem.getPosition().getH())*vr >= event.getY())
                     {
                         this.addColor(joinItem, joinData.getColor());
+                        lifecycleOwner.addTotal(joinItem.getUnitPrice());
                         viewModel.selectItem(joinData.getId(), joinItem.getName(), joinData.getColor());
 
                     }
