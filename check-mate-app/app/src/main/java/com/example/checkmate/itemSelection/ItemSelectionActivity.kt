@@ -1,5 +1,7 @@
 package com.example.checkmate.itemSelection
 
+import android.text.TextWatcher;
+import android.text.Editable;
 import android.widget.ArrayAdapter
 import java.text.DecimalFormat
 import android.content.Intent
@@ -54,7 +56,7 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
     private var joinData: JoinData? = null;
     private var longTouch: Boolean = false;
     private var total: Double = 0.0;
-    private var tipPercentage: Double = 1.0;
+    private var tipPercentage: Double = 0.0;
     private var checkmate: Double = 0.0;
 
     private lateinit var viewModel: ItemSelectionViewModel
@@ -75,9 +77,14 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
 
     fun addTotal(added: Double) {
         total += added
-        var decimalFormat = DecimalFormat("0.00")
-        doneButton.text = "Total: " + decimalFormat.format(total * tipPercentage + checkmate) + " BGN"
+        updateButton()
     }
+    
+    fun updateButton() {
+        var decimalFormat = DecimalFormat("0.00")
+        doneButton.text = "Total: " + decimalFormat.format(total * (1 + tipPercentage/100.0f) + checkmate) + " BGN"
+    }
+    
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,6 +138,39 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
             startActivity(intent)
         }
 
+
+        filled_exposed_dropdown.addTextChangedListener(object: TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {
+                tipPercentage = filled_exposed_dropdown.text.toString().replace("%", "").toDouble()
+                updateButton()
+            }
+            
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+        });
+
+        filled_exposed_dropdown2.addTextChangedListener(object: TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {
+                checkmate = filled_exposed_dropdown2.text.toString().replace(" BGN", "").toDouble()
+                updateButton()
+            }
+            
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+        });
+        
         var adapter =
             ArrayAdapter(
                 this.applicationContext,
