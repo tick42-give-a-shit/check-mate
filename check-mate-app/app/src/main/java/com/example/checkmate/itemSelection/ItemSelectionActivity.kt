@@ -92,6 +92,7 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
         //println(">>> FOO " + joinData!!.items.size)
         billPhoto.setJoinData(joinData)
         billPhoto.setImageBitmap(bitmap)
+        billPhoto.setLifecycleOwner(this)
         billPhoto.setViewModel(viewModel)
         billPhoto.setOnTouchListener(this)
         billPhoto.setOnLongClickListener(this)
@@ -124,7 +125,7 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
 
     private fun poll() {
         viewModel.itemDetails.observe(this, Observer { t->
-            print("a")
+            billPhoto.onChanged(t)
         })
 
     }
