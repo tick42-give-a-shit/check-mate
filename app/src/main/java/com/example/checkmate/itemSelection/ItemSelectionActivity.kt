@@ -1,5 +1,6 @@
 package com.example.checkmate.itemSelection
 
+import com.example.checkmate.misc.CustomView;
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,9 +25,9 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
 
         val pathPhoto = intent.getStringExtra("pathToPhoto")
         if (pathPhoto != null) {
-            val myBitmap = BitmapFactory.decodeFile(pathPhoto)
-            billPhoto.setImageBitmap(myBitmap)
+            //val myBitmap = BitmapFactory.decodeFile(pathPhoto)
         }
+        billPhoto.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bill));
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         if (nfcAdapter == null) {

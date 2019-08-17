@@ -28,6 +28,14 @@ class MainActivity : AppCompatActivity() {
     private val PICK_BILL_PHOTO = 2;
     private lateinit var mainActivityViewModel: MainActivityViewModel
 
+    override fun onResume()
+    {
+        super.onResume();
+        val intent = Intent(this, ItemSelectionActivity::class.java)
+
+        startActivity(intent)
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.example.checkmate.R.layout.activity_main)

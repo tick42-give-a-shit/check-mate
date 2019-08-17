@@ -1,0 +1,1 @@
+@adb shell monkey -p com.example.checkmate 1
