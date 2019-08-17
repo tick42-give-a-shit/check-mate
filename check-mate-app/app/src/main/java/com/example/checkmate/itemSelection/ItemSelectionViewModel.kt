@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.checkmate.data.ItemSelectionRepository
 import com.example.checkmate.data.model.BillDetailsResponse
 import com.example.checkmate.data.model.SelectedItem
+import com.example.checkmate.data.model.SelectItemRequest
 
 class ItemSelectionViewModel(val repository: ItemSelectionRepository) : ViewModel() {
 
@@ -20,8 +21,8 @@ class ItemSelectionViewModel(val repository: ItemSelectionRepository) : ViewMode
         super.onCleared()
     }
 
-    fun selectItem(name: String, myColor: String) {
+    fun selectItem(id: String, name: String, myColor: String) {
         val item = SelectedItem(name, myColor)
-        repository.selectItem(item)
+        repository.selectItem(SelectItemRequest(id, item))
     }
 }

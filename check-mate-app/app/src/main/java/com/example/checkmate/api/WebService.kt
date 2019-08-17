@@ -4,7 +4,7 @@ import android.content.Context
 import com.example.checkmate.data.model.BillDetailsResponse
 import com.example.checkmate.data.model.BillSession
 import com.example.checkmate.data.model.PayRequest
-import com.example.checkmate.data.model.SelectedItem
+import com.example.checkmate.data.model.SelectItemRequest
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -31,7 +31,7 @@ interface Webservice {
     fun joinBillSession(@Body request: JoinSessionRequest): Call<BillSession>
 
     @POST("/selectItem")
-    fun selectItem(@Body selectedItem: SelectedItem): Call<Unit>
+    fun selectItem(@Body selectedItem: SelectItemRequest): Call<Unit>
 
     @GET("/getBillDetails")
     fun getBillDetails(@Query("id") billId: Long): Call<BillDetailsResponse>

@@ -6,10 +6,14 @@ import androidx.work.*
 import com.example.checkmate.api.Webservice
 import com.example.checkmate.data.model.BillDetailsResponse
 import com.example.checkmate.data.model.SelectedItem
+import com.example.checkmate.data.model.SelectItemRequest
 import com.squareup.moshi.Moshi
 import java.lang.Exception
 import java.util.*
 import java.util.concurrent.TimeUnit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ItemSelectionRepository(val api: Webservice) {
 
@@ -42,7 +46,13 @@ class ItemSelectionRepository(val api: Webservice) {
         timer.cancel()
     }
 
-    fun selectItem(item: SelectedItem) {
-        api.selectItem(item)
+    fun selectItem(item: SelectItemRequest) {
+        api.selectItem(item).enqueue(object : Callback<Unit> {
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+            }
+
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+            }
+        })
     }
 }

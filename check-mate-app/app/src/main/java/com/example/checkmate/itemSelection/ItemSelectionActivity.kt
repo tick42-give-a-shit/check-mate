@@ -84,12 +84,15 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
             DataHolder.total!!,
             sessionState.myColor
         )
+        viewModel = ViewModelProviders.of(this, ItemSelectionViewModelFactory(this.applicationContext))
+            .get(ItemSelectionViewModel::class.java)
         var base64 = DataHolder.base64
         var decodedBytes = Base64.decode(base64, 0)
         var bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
         //println(">>> FOO " + joinData!!.items.size)
         billPhoto.setJoinData(joinData)
         billPhoto.setImageBitmap(bitmap)
+        billPhoto.setViewModel(viewModel)
         billPhoto.setOnTouchListener(this)
         billPhoto.setOnLongClickListener(this)
         var r = Integer.valueOf(joinData!!.color!!.substring(1, 3), 16);
@@ -114,8 +117,6 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
             startActivity(intent)
         }
 
-        viewModel = ViewModelProviders.of(this, ItemSelectionViewModelFactory(this.applicationContext))
-            .get(ItemSelectionViewModel::class.java)
         viewModel.poll(sessionState.billId.toString())
         poll()
 

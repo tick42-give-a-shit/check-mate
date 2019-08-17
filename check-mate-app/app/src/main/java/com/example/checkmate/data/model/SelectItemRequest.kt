@@ -1,3 +1,3 @@
 package com.example.checkmate.data.model
 
-data class SelectItemRequest(val billId: String, val item: SelectedItem)
+data class SelectItemRequest(val id: String, val item: SelectedItem)

@@ -1,5 +1,6 @@
 package com.example.checkmate.misc;
 
+import com.example.checkmate.itemSelection.ItemSelectionViewModel;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import android.os.AsyncTask;
@@ -47,6 +48,11 @@ public class CustomView extends ImageView {
     public void setJoinData(JoinData joinData) {
         this.joinData = joinData;
     }
+    
+    ItemSelectionViewModel viewModel;
+    public void setViewModel(ItemSelectionViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
 
 
     @Override
@@ -71,8 +77,13 @@ public class CustomView extends ImageView {
                         (joinItem.getPosition().getY() + joinItem.getPosition().getH())*vr >= event.getY())
                     {
                         System.out.println(">>> got one!");
-                        joinItem.setClicked(joinItem.getClicked() == null || joinItem.getClicked() == false);
-                        new OnClickPostAsyncTask().execute(joinItem);
+                        Boolean wasntClicked = (joinItem.getClicked() == null || joinItem.getClicked() == false);
+                        if (wasntClicked) {
+                            joinItem.setClicked(wasntClicked);
+                            System.out.println(">>> " + joinData.getId() + " " + joinItem.getName() + " " + joinData.getColor());
+                            viewModel.selectItem(joinData.getId(), joinItem.getName(), joinData.getColor());
+                            // new OnClickPostAsyncTask().execute(joinItem);
+                        }
                     }
                 }
 
