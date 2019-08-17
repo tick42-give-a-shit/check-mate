@@ -16,7 +16,15 @@ class CardFormRepository(val api: Webservice) {
 
     fun payMyBill(billId: Long, colour: String) {
         val payRequest = PayRequest(billId, colour)
-        api.payBill(payRequest)
+        api.payBill(payRequest).enqueue(object : Callback<Unit> {
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                println("kak failnah" + t)
+            }
+
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+
+            }
+        })
 
     }
 }
