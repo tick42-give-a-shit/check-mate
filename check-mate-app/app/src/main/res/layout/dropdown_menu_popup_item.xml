@@ -5,4 +5,5 @@
     android:padding="16dp"
     android:ellipsize="end"
     android:maxLines="1"
+    android:textSize="24dp"
     android:textAppearance="?attr/textAppearanceSubtitle1"/>

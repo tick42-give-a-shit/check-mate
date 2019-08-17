@@ -135,9 +135,17 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
             ArrayAdapter(
                 this.applicationContext,
                 R.layout.dropdown_menu_popup_item,
-                arrayOf("Hi", "There"));
+                arrayOf("0%", "5%", "10%", "15%", "20%"));
 
         filled_exposed_dropdown.setAdapter(adapter);
+        
+        var adapter2 =
+            ArrayAdapter(
+                this.applicationContext,
+                R.layout.dropdown_menu_popup_item,
+                arrayOf("1 BGN", "2 BGN", "5 BGN"));
+
+        filled_exposed_dropdown2.setAdapter(adapter2);
 
         viewModel.poll(sessionState.billId.toString())
 
