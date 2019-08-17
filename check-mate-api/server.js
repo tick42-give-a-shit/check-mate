@@ -1,5 +1,8 @@
 const express = require('express');
+<<<<<<< HEAD
 const morgan = require('morgan');
+=======
+>>>>>>> dd23af3a26205b41df2de58cb1af970b1031dd53
 const {
   imageFromPathToBase64,
   base64ToBuffer
@@ -21,7 +24,10 @@ const port = process.env.PORT || 8080;
 const app = express();
 
 app.use(express.json({ limit: '50mb' }));
+<<<<<<< HEAD
 app.use(morgan(':method :url :response-time'));
+=======
+>>>>>>> dd23af3a26205b41df2de58cb1af970b1031dd53
 
 app.post('/new', async ({ body: { base64 = imageFromPathToBase64('./assets/bill.jpg') } }, res) => {
   const buffer = base64ToBuffer(base64);

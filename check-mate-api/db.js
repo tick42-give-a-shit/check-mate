@@ -45,12 +45,27 @@ const colors = ['#DB7F8E', '#9392B7', '#9DA3A4', '#FFDBDA', '#D5C5C8'];
 
 const generateNewId = () => +new Date();
 
+<<<<<<< HEAD
+=======
+const generateRandomColor = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+
+>>>>>>> dd23af3a26205b41df2de58cb1af970b1031dd53
 const getNewColorForBillId = (id) => {
   if (typeof db[id] === 'undefined') {
     return colors[0];
   }
 
+<<<<<<< HEAD
   return colors.find((color) => !db[id].users.some((user) => user.color === color));
+=======
+  const newColor = colors.find((color) => !db[id].users.some((user) => user.color === color));
+
+  if (typeof newColor === 'undefined') {
+    return generateRandomColor();
+  }
+
+  return newColor;
+>>>>>>> dd23af3a26205b41df2de58cb1af970b1031dd53
 };
 
 const insertNewBill = (id, itemsWithoutSelections, restaurant, creatorUserColor, total, base64) => {
