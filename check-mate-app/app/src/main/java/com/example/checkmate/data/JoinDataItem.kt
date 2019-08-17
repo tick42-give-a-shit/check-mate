@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.example.checkmate.data.Rect
+import java.util.ArrayList
 
 @JsonIgnoreProperties
 data class JoinDataItem(
@@ -12,6 +13,6 @@ data class JoinDataItem(
     val quantity: Float?,
     val amount: Float?,
     val unitPrice: Float?,
-    var clicked: Boolean?
+    var clicked: ArrayList<String>?
 )
 

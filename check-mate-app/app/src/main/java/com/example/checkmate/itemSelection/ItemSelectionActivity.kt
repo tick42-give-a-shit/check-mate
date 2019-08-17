@@ -1,5 +1,7 @@
 package com.example.checkmate.itemSelection
 
+import android.widget.ArrayAdapter
+import java.text.DecimalFormat
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -51,6 +53,9 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
     private var nfcAdapter: NfcAdapter? = null
     private var joinData: JoinData? = null;
     private var longTouch: Boolean = false;
+    private var total: Double = 0.0;
+    private var tipPercentage: Double = 1.0;
+    private var checkmate: Double = 0.0;
 
     private lateinit var viewModel: ItemSelectionViewModel
 
@@ -67,6 +72,12 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
     }
 
     private lateinit var sessionState: SessionState
+
+    fun addTotal(added: Double) {
+        total += added
+        var decimalFormat = DecimalFormat("0.00")
+        doneButton.text = "Total: " + decimalFormat.format(total * tipPercentage + checkmate) + " BGN"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +113,7 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
         //println(">>> FOO " + joinData!!.items.size)
         billPhoto.setJoinData(joinData)
         billPhoto.setImageBitmap(bitmap)
+        billPhoto.setLifecycleOwner(this)
         billPhoto.setViewModel(viewModel)
         billPhoto.setOnTouchListener(this)
         billPhoto.setOnLongClickListener(this)
@@ -123,6 +135,8 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
         // Register callback
         nfcAdapter?.setNdefPushMessageCallback(this, this)
 
+        doneButton.text = "Total: 0.00 BGN"
+
         doneButton.setOnClickListener {
             val intent = Intent(this, CardFormActivity::class.java)
             sessionState.personalPaymentAmount = 333.0
@@ -130,14 +144,23 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
             startActivity(intent)
         }
 
+        var adapter =
+            ArrayAdapter(
+                this.applicationContext,
+                R.layout.dropdown_menu_popup_item,
+                arrayOf("Hi", "There"));
+
+        filled_exposed_dropdown.setAdapter(adapter);
+
         viewModel.poll(sessionState.billId.toString())
+
         poll()
 
     }
 
     private fun poll() {
-        viewModel.itemDetails.observe(this, Observer { t ->
-            print("a")
+        viewModel.itemDetails.observe(this, Observer { t->
+            billPhoto.onChanged(t)
         })
 
     }

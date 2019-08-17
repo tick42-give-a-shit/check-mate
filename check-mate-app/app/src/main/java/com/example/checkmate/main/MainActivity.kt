@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity() {
                     i.quantity.toFloat(),
                     i.quantity.toFloat(),
                     i.unitPrice.toFloat(),
-                    false
+                    null
                 )
             }.toTypedArray()
 
