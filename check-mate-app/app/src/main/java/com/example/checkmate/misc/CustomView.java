@@ -87,6 +87,9 @@ public class CustomView extends ImageView {
         if (this.joinData.getItems() == null) {
             return;
         }
+        if (bdr == null || bdr.getItems() == null) {
+            return;
+        }
         for (ItemStatus item : bdr.getItems()) {
             for (JoinDataItem joinItem : this.joinData.getItems()) {
                 if (item.getName().toUpperCase().equals(joinItem.getName().toUpperCase())) {

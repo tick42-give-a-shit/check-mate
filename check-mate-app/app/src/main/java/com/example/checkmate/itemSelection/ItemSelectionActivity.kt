@@ -1,5 +1,6 @@
 package com.example.checkmate.itemSelection
 
+import android.widget.ArrayAdapter
 import java.text.DecimalFormat
 import android.content.Intent
 import android.graphics.Bitmap
@@ -53,6 +54,8 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
     private var joinData: JoinData? = null;
     private var longTouch: Boolean = false;
     private var total: Double = 0.0;
+    private var tipPercentage: Double = 1.0;
+    private var checkmate: Double = 0.0;
 
     private lateinit var viewModel: ItemSelectionViewModel
 
@@ -73,9 +76,9 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
     fun addTotal(added: Double) {
         total += added
         var decimalFormat = DecimalFormat("0.00")
-        doneButton.text = "Total: " + decimalFormat.format(total) + " BGN"
+        doneButton.text = "Total: " + decimalFormat.format(total * tipPercentage + checkmate) + " BGN"
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_selection)
@@ -118,7 +121,7 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
         }
         // Register callback
         nfcAdapter?.setNdefPushMessageCallback(this, this)
-        
+
         doneButton.text = "Total: 0.00 BGN"
 
         doneButton.setOnClickListener {
@@ -128,7 +131,16 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
             startActivity(intent)
         }
 
+        var adapter =
+            ArrayAdapter(
+                this.applicationContext,
+                R.layout.dropdown_menu_popup_item,
+                arrayOf("Hi", "There"));
+
+        filled_exposed_dropdown.setAdapter(adapter);
+
         viewModel.poll(sessionState.billId.toString())
+
         poll()
 
     }
