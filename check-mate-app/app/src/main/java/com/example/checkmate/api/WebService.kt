@@ -11,15 +11,19 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
+import java.util.concurrent.TimeUnit
 import javax.net.ssl.*
+
+class CreateBillRequest(val base64: String)
 
 interface Webservice {
 
     @POST("/new")
-    fun createNewBill(@Body photo: String): Call<BillSession>
+    fun createNewBill(@Body request: CreateBillRequest): Call<BillSession>
 
     @POST("/join")
     fun joinBillSession(@Body billId: String): Call<BillSession>
@@ -33,9 +37,6 @@ interface Webservice {
     @POST("/pay")
     fun payBill(@Body payRequest: PayRequest): Call<Unit>
 
-    @POST("/bill")
-    fun addBillPhoto(@Body photo: String)
-
     companion object {
         fun create(context: Context): Webservice {
 //            val clientBuilder = OkHttpClient.Builder()
@@ -44,15 +45,14 @@ interface Webservice {
 //                .authenticator(ApiAuthenticator(context))
 //                .build()
 
-
             val retrofit = Retrofit.Builder()
                 .addCallAdapterFactory(
                     RxJava2CallAdapterFactory.create()
                 )
                 .addConverterFactory(
-                    GsonConverterFactory.create()
+                    MoshiConverterFactory.create()
                 )
-                .baseUrl("https://10.0.2.2:44334")
+                .baseUrl("https://give-a-shit-check-mate.herokuapp.com")
                 .client(getUnsafeOkHttpClient(context))
                 .build()
 
@@ -104,6 +104,8 @@ interface Webservice {
                         return true
                     }
                 })
+
+                builder.readTimeout(170,TimeUnit.SECONDS)
 
                 return builder.build()
             } catch (e: Exception) {

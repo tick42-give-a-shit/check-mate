@@ -1,8 +1,11 @@
 package com.example.checkmate.main
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.checkmate.data.LoginRepository
 import com.example.checkmate.data.MainActivityRepository
+import com.example.checkmate.data.model.BillSession
 
 class MainActivityViewModel(
     private val loginRepository: LoginRepository,
@@ -12,7 +15,13 @@ class MainActivityViewModel(
     val loggedInUser = loginRepository.user
     val isLoggedIn = loginRepository.isLoggedIn
 
-    lateinit var currentPhotoPath: String
+    var currentPhotoPath: String? = null
+
+    val currentBillSession: LiveData<BillSession>
+
+    init {
+        currentBillSession = mainActivityRepository.currentBillSession;
+    }
 
     fun sendBillPhoto(data: String) {
         this.mainActivityRepository.sendBillPhoto(data)

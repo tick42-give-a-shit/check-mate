@@ -13,16 +13,21 @@ import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.NfcEvent
 import android.widget.Toast
+import com.example.checkmate.data.SessionState
+import com.example.checkmate.data.model.BillSession
 import com.example.checkmate.pay.CardFormActivity
 
 
 class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageCallback {
 
     private var nfcAdapter: NfcAdapter? = null
+    private lateinit var sessionState: SessionState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_selection)
+
+        sessionState = intent.getParcelableExtra("sessionState")
 
         val pathPhoto = intent.getStringExtra("pathToPhoto")
         if (pathPhoto != null) {
@@ -41,7 +46,8 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
 
         continueButton.setOnClickListener {
             val intent = Intent(this, CardFormActivity::class.java)
-            intent.putExtra("amount", 333)
+            sessionState.personalPaymentAmount = 333.0
+            intent.putExtra("sessionState", sessionState)
             startActivity(intent)
         }
     }
