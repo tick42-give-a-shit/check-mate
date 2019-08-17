@@ -12,6 +12,8 @@ class MainActivityViewModel(
     val loggedInUser = loginRepository.user
     val isLoggedIn = loginRepository.isLoggedIn
 
+    lateinit var currentPhotoPath: String
+
     fun sendBillPhoto(data: String) {
         this.mainActivityRepository.sendBillPhoto(data)
     }

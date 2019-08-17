@@ -1,6 +1,10 @@
 package com.example.checkmate.api
 
 import android.content.Context
+import com.example.checkmate.data.model.BillDetailsResponse
+import com.example.checkmate.data.model.BillSession
+import com.example.checkmate.data.model.PayRequest
+import com.example.checkmate.data.model.SelectedItem
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -13,6 +17,21 @@ import java.security.cert.X509Certificate
 import javax.net.ssl.*
 
 interface Webservice {
+
+    @POST("/new")
+    fun createNewBill(@Body photo: String): Call<BillSession>
+
+    @POST("/join")
+    fun joinBillSession(@Body billId: String): Call<BillSession>
+
+    @POST("/selectItem")
+    fun selectItem(@Body selectedItem: SelectedItem): Call<Unit>
+
+    @GET("/getBillDetails")
+    fun getBillDetails(@Query("billId") billId: String): Call<BillDetailsResponse>
+
+    @POST("/pay")
+    fun payBill(@Body payRequest: PayRequest): Call<Unit>
 
     @POST("/bill")
     fun addBillPhoto(@Body photo: String)

@@ -9,9 +9,16 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_main.*
 import com.example.checkmate.ui.login.LoginActivity
 import java.util.*
-import android.app.Activity
+import android.net.Uri
+import android.os.Environment
 import android.util.Base64
-
+import androidx.core.content.FileProvider
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import android.graphics.BitmapFactory
+import com.example.checkmate.itemSelection.ItemSelectionActivity
+import java.nio.ByteBuffer
 
 
 class MainActivity : AppCompatActivity() {
@@ -23,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.example.checkmate.R.layout.activity_main)
-        scanButton.setOnClickListener { this.pickImage() }
+        scanButton.setOnClickListener { this.dispatchTakePictureIntent() }
 
         mainActivityViewModel = ViewModelProviders.of(this, MainActivityViewModelFactory(this.applicationContext))
             .get(MainActivityViewModel::class.java)
@@ -37,28 +44,35 @@ class MainActivity : AppCompatActivity() {
     private fun dispatchTakePictureIntent() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(packageManager)?.also {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                val photoFile: File? = createImageFile()
+                photoFile?.also {
+                    val photoURI: Uri = FileProvider.getUriForFile(this, "com.example.checkmate.fileprovider", it)
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                }
             }
         }
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val imageBitmap = data!!.extras.get("data") as Bitmap
-            imageView.setImageBitmap(imageBitmap)
-            //mainActivityViewModel.sendBillPhoto(Base64.getEncoder().)
+//            val imageBitmap = data!!.extras.get("data") as Bitmap
+//            imageView.setImageBitmap(imageBitmap)
+            val photoPath = mainActivityViewModel.currentPhotoPath
+            val bitmap = BitmapFactory.decodeFile(photoPath)
+
+            val byteBuffer = ByteBuffer.allocate(bitmap.byteCount);
+            bitmap.copyPixelsToBuffer(byteBuffer);
+            val bytes = byteBuffer.toString().toByteArray();
+
+            val base64 = Base64.encodeToString(bytes, Base64.DEFAULT)
+
+            val intent = Intent(this, ItemSelectionActivity::class.java)
+
+            intent.putExtra("pathToPhoto", mainActivityViewModel.currentPhotoPath)
+            startActivity(intent)
         }
-        if (requestCode == PICK_BILL_PHOTO && resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-                //Display an error
-                return
-            }
-            val inputStream = this.applicationContext.getContentResolver().openInputStream(data.data)
-            val picture = inputStream.readBytes()
-            val base64 = Base64.encodeToString(picture, Base64.DEFAULT)
-            //Now you can do whatever you want with your inpustream, save it as file, upload to a server, decode a bitmap...
-        }
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -68,4 +82,18 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, PICK_BILL_PHOTO)
     }
 
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            mainActivityViewModel.currentPhotoPath = absolutePath
+        }
+    }
 }
