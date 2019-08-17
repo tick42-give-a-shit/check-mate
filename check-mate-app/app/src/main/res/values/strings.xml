@@ -2,6 +2,7 @@
     <string name="app_name">CheckMate</string>
     <string name="scanButton">Scan</string>
     <string name="joinButton">Join</string>
+    <string name="doneButton">Done</string>
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

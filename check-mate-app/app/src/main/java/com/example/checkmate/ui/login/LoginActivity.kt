@@ -1,5 +1,7 @@
 package com.example.checkmate.ui.login
 
+import android.provider.Settings.Secure;
+
 import android.app.Activity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -20,6 +22,14 @@ import com.example.checkmate.R
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
+
+    override fun onResume() {
+        super.onResume();
+        loginViewModel.login(
+            Secure.getString(getContentResolver(), Secure.ANDROID_ID),
+            "password"
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +105,7 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
         }
+
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {

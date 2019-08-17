@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 
 class CardFormViewModel(val cardFormRepository: CardFormRepository) : ViewModel() {
 
-    fun payBill(billId: String, colour: String) {
+    fun payBill(billId: Long, colour: String) {
         cardFormRepository.payMyBill(billId, colour)
     }
 

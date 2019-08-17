@@ -20,19 +20,21 @@ import javax.net.ssl.*
 
 class CreateBillRequest(val base64: String)
 
+class JoinSessionRequest(val id:Long)
+
 interface Webservice {
 
     @POST("/new")
     fun createNewBill(@Body request: CreateBillRequest): Call<BillSession>
 
     @POST("/join")
-    fun joinBillSession(@Body billId: String): Call<BillSession>
+    fun joinBillSession(@Body request: JoinSessionRequest): Call<BillSession>
 
     @POST("/selectItem")
     fun selectItem(@Body selectedItem: SelectedItem): Call<Unit>
 
     @GET("/getBillDetails")
-    fun getBillDetails(@Query("billId") billId: String): Call<BillDetailsResponse>
+    fun getBillDetails(@Query("id") billId: Long): Call<BillDetailsResponse>
 
     @POST("/pay")
     fun payBill(@Body payRequest: PayRequest): Call<Unit>
@@ -105,7 +107,7 @@ interface Webservice {
                     }
                 })
 
-                builder.readTimeout(170,TimeUnit.SECONDS)
+                builder.readTimeout(170, TimeUnit.SECONDS)
 
                 return builder.build()
             } catch (e: Exception) {

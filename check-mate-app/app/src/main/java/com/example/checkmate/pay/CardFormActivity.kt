@@ -65,7 +65,7 @@ class CardFormActivity : AppCompatActivity() {
 
         if (sessionState.isCreator) {
             val intent = Intent(this, FinalPaymentActivity::class.java)
-
+            intent.putExtra("sessionState", sessionState)
             startActivity(intent)
         }
     }

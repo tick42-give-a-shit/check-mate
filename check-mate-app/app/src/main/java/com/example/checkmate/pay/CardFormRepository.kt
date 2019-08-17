@@ -14,8 +14,8 @@ class CardFormRepository(val api: Webservice) {
         MutableLiveData<BillSession>()
     }
 
-    fun payMyBill(billId: String, colour: String) {
-        val payRequest = PayRequest(billId, colour, true)
+    fun payMyBill(billId: Long, colour: String) {
+        val payRequest = PayRequest(billId, colour)
         api.payBill(payRequest)
 
     }

@@ -27,4 +27,8 @@ class MainActivityViewModel(
         this.mainActivityRepository.sendBillPhoto(data)
     }
 
+    fun joinPaymentSession(billId:String){
+        this.mainActivityRepository.joinPaymentSession(billId)
+    }
+
 }

@@ -5,26 +5,29 @@ import android.os.Parcelable
 
 
 class SessionState(
-    var billId: String?,
+    var billId: Long?,
     var isCreator: Boolean,
     var personalPaymentAmount: Double,
     var totalPaymentAmount: Double,
-    var myColor: String?
+    var myColor: String?,
+    var restaurant: String?
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString(),
+        parcel.readLong(),
         parcel.readByte() != 0.toByte(),
         parcel.readDouble(),
         parcel.readDouble(),
+        parcel.readString(),
         parcel.readString()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(billId)
+        parcel.writeLong(billId ?: 0)
         parcel.writeByte(if (isCreator) 1 else 0)
         parcel.writeDouble(personalPaymentAmount)
         parcel.writeDouble(totalPaymentAmount)
         parcel.writeString(myColor)
+        parcel.writeString(restaurant)
     }
 
     override fun describeContents(): Int {
