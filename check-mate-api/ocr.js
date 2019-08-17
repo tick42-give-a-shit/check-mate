@@ -7,7 +7,7 @@ const totalPattern = /[о|o]бщ.+?(\d+?\.\d{2})/i;
 const partialTotalPattern = /[o|о]бщ[^\d]+?$/i;
 const quantityPricePattern = /\d *?[x|х] *?\d+?\.\d{2}/i;
 const itemPattern = /(?<name>.+?) (?<quantityString>\d+?) *?[x|х] *?(?<uniPriceString>\d+?\.\d{2})/i;
-const eolPattern = /\d+?\.\d{2} б/i
+const eolPattern = /\d+?\.\d{2} б/i;
 
 const mergeLinesAtIndexes = (lines, startIndex, ...restIndexes) => {
   const mergedLines = [...lines];
@@ -63,7 +63,7 @@ const getItems = (linesWithPositions) => {
     const itemPatternMatch = line.match(itemPattern);
 
     if (itemPatternMatch !== null) {
-      const { name, quantityString, uniPriceString } = itemPatternMatch.groups
+      const { name, quantityString, uniPriceString } = itemPatternMatch.groups;
 
       const item = {
         position: {
@@ -176,7 +176,7 @@ const convertTextsAndLinesToLinesWithPositions = (texts, lines) => {
   const textsDeepClone = deepClone(texts);
   const linesWithPosition = [];
 
-  lines.forEach((line, index) => {
+  lines.forEach((line) => {
     let stopIncluding = false;
     let lastIndex;
     let currentLine = line;

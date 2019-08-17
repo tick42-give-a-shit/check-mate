@@ -48,9 +48,9 @@ const generateNewId = () => +new Date();
 const getNewColorForBillId = (id) => {
   if (typeof db[id] === 'undefined') {
     return colors[0];
-  } else {
-    return colors.find((color) => !db[id].users.some((user) => user.color === color));
   }
+
+  return colors.find((color) => !db[id].users.some((user) => user.color === color));
 };
 
 const insertNewBill = (id, itemsWithoutSelections, restaurant, creatorUserColor, total, base64) => {
