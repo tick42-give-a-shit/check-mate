@@ -7,11 +7,6 @@
   },
   "dependencies": {
     "@google-cloud/vision": "^1.1.4",
-<<<<<<< HEAD
-    "express": "^4.17.1",
-    "morgan": "^1.9.1"
-=======
     "express": "^4.17.1"
->>>>>>> dd23af3a26205b41df2de58cb1af970b1031dd53
   }
 }
