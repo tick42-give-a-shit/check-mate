@@ -1,5 +1,6 @@
 package com.example.checkmate.itemSelection
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.NfcEvent
 import android.widget.Toast
+import com.example.checkmate.pay.CardFormActivity
 
 
 class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageCallback {
@@ -31,11 +33,17 @@ class ItemSelectionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageC
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         if (nfcAdapter == null) {
             Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show()
-            finish()
-            return
+            //finish()
+            //return
         }
         // Register callback
         nfcAdapter?.setNdefPushMessageCallback(this, this)
+
+        continueButton.setOnClickListener {
+            val intent = Intent(this, CardFormActivity::class.java)
+            intent.putExtra("amount", 333)
+            startActivity(intent)
+        }
     }
 
     override fun createNdefMessage(event: NfcEvent): NdefMessage {

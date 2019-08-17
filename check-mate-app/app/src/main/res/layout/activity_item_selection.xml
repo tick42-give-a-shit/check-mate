@@ -14,4 +14,12 @@
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="64dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="4dp"
             app:layout_constraintDimensionRatio="9:16" android:scaleType="centerCrop"/>
+    <Button
+            android:text="Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/continueButton" android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/billPhoto" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="160dp" android:layout_marginStart="160dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
