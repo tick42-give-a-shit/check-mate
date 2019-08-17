@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CheckMate</string>
+    <string name="scanButton">Scan</string>
+    <string name="joinButton">Join</string>
+</resources>
