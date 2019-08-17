@@ -1,4 +1,4 @@
-# Pursebook
+# Check Mate
 
 ## User spec
 
