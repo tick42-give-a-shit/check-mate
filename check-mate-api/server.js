@@ -21,6 +21,15 @@ const app = express();
 
 app.use(express.json({ limit: '50mb' }));
 
+app.post('/ocr', async ({ body: { base64 = imageFromPathToBase64('./assets/bill.jpg') } }, res) => {
+  const buffer = base64ToBuffer(base64);
+
+  const { restaurant, total, items } = await ocr(buffer);
+  
+  res.end();
+
+});
+
 app.post('/new', async ({ body: { base64 = imageFromPathToBase64('./assets/bill.jpg') } }, res) => {
   const buffer = base64ToBuffer(base64);
 

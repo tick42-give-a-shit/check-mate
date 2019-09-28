@@ -3,6 +3,11 @@ const { deepClone, convertCommasToDots } = require('./utils.js');
 
 const client = new vision.ImageAnnotatorClient();
 
+// heuristics:
+// * totals
+// - have to be below item lines
+// - have to be higher than any item lines
+
 const totalPattern = /[о|o]бщ.+?(\d+?\.\d{2})/i;
 const partialTotalPattern = /[o|о]бщ[^\d]+?$/i;
 const quantityPricePattern = /\d *?[x|х] *?\d+?\.\d{2}/i;
@@ -220,8 +225,22 @@ const normalizeLineWithPosition = ({ line, position }) => {
   };
 };
 
+// input: buffer of image bytes
+// output:
+// {
+//   restaurant: string,
+//   total: number,
+//   items: [{
+//     description: string,
+//     vertices: [{ x: number, y: number }]
+//   }]
+// }
+
 const ocr = async (buffer) => {
   const [{ textAnnotations }] = await client.documentTextDetection(buffer);
+
+  console.log(JSON.stringify(textAnnotations));
+
   let texts = textAnnotations.map(({ description, boundingPoly: { vertices } }) => ({
     description,
     vertices

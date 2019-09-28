@@ -3,10 +3,17 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "set GOOGLE_APPLICATION_CREDENTIALS=assets/check-mate-8c9f922b574a.json& node_modules\\.bin\\nodemon.cmd server.js"
   },
   "dependencies": {
-    "@google-cloud/vision": "^1.1.4",
-    "express": "^4.17.1"
+    "@google-cloud/vision": "1.1.4",
+    "express": "4.17.1",
+    "husky": "3.0.7"
+  },
+  "devDependencies": {
+    "nodemon": "1.19.1"
+  },
+  "husky": {
+    "pre-commit": "pre-commit.cmd"
   }
 }
